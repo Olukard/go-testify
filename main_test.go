@@ -11,7 +11,7 @@ import (
 )
 
 func TestMainHandlerCorrectRequest(t *testing.T) {
-	req := httptest.NewRequest("GET", "/cafe?count=5&city=moscow", nil)
+	req := httptest.NewRequest("GET", "/cafe?count=4&city=moscow", nil)
 
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
@@ -19,11 +19,12 @@ func TestMainHandlerCorrectRequest(t *testing.T) {
 
 	require.Equal(t, http.StatusOK, responseRecorder.Code)
 	require.NotEmpty(t, responseRecorder.Body.String())
+	require.Equal(t, "Мир кофе,Сладкоежка,Кофе и завтраки,Сытый студент", responseRecorder.Body.String())
 }
 
 func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	totalCount := 4
-	req := httptest.NewRequest("GET", "/cafe?count=5&city=moscow", nil)
+	req := httptest.NewRequest("GET", "/cafe?count=99&city=moscow", nil)
 
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
@@ -37,7 +38,7 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 }
 
 func TestMainHandlerWhenIncorrectCity(t *testing.T) {
-	req := httptest.NewRequest("GET", "/cafe?count=4&city=samara", nil)
+	req := httptest.NewRequest("GET", "/cafe?count=4&city=IncorrectCityPH", nil)
 
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
